@@ -16,10 +16,10 @@ sys.path.insert(0, str(project_root))
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "8000"))
     host = os.getenv("HOST", "0.0.0.0")
-    
+
     print(f"Starting NeuroBreak API server on {host}:{port}")
     print("Press Ctrl+C to stop")
-    
+
     uvicorn.run(
         "engine.server:app",
         host=host,
