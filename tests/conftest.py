@@ -3,7 +3,7 @@ pytest 配置和共享 fixtures
 """
 
 import os
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, MagicMock, patch
 
 import pytest
 
@@ -36,7 +36,8 @@ def mock_model_loading():
             mock_param.device = mock_device
             mock_mod.parameters.return_value = [mock_param]
             # Mock generate 方法
-            mock_output_ids = Mock()
+            # 使用 MagicMock 以便支持 __getitem__ 这样的魔术方法
+            mock_output_ids = MagicMock()
             mock_output_ids.shape = [1, 20]
             mock_output_ids.__getitem__.return_value = [1, 2, 3, 4, 5]
             mock_mod.generate.return_value = mock_output_ids
@@ -67,7 +68,8 @@ def mock_model_manager():
     mock_param = Mock()
     mock_param.device = Mock()
     mock_model.parameters.return_value = [mock_param]
-    mock_output_ids = Mock()
+    # 使用 MagicMock 以便在测试中安全地调用 __getitem__
+    mock_output_ids = MagicMock()
     mock_output_ids.shape = [1, 20]
     mock_output_ids.__getitem__.return_value = [1, 2, 3, 4, 5]
     mock_model.generate.return_value = mock_output_ids
