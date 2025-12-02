@@ -45,7 +45,9 @@ def resolve_dtype() -> torch.dtype:
     return torch.bfloat16 if major >= 8 else torch.float16
 
 
-def get_model_path(model_id: str, local_path: str, container_path: str, workspace_path: str = "") -> str:
+def get_model_path(
+    model_id: str, local_path: str, container_path: str, workspace_path: str = ""
+) -> str:
     """
     获取模型路径：优先使用本地路径，如果不存在则使用HuggingFace ID
 
@@ -94,7 +96,10 @@ def get_model_path(model_id: str, local_path: str, container_path: str, workspac
             print(f"[模型路径] ⚠ 本地路径存在但缺少config.json: {local_path}")
 
     # 检查父目录是否存在（可能模型在子目录中）
-    for parent_path in [container_path_obj.parent, workspace_path_obj.parent if workspace_path_obj else None]:
+    for parent_path in [
+        container_path_obj.parent,
+        workspace_path_obj.parent if workspace_path_obj else None,
+    ]:
         if parent_path and parent_path.exists():
             print(f"[模型路径检测] 容器父目录存在: {parent_path}")
             items = list(parent_path.iterdir())
@@ -112,7 +117,9 @@ def get_model_path(model_id: str, local_path: str, container_path: str, workspac
     return model_id
 
 
-def load_causal_model(model_id: str, local_path: str = "", container_path: str = "", workspace_path: str = "") -> tuple[AutoTokenizer, AutoModelForCausalLM]:
+def load_causal_model(
+    model_id: str, local_path: str = "", container_path: str = "", workspace_path: str = ""
+) -> tuple[AutoTokenizer, AutoModelForCausalLM]:
     """
     加载因果语言模型
 
@@ -125,7 +132,11 @@ def load_causal_model(model_id: str, local_path: str = "", container_path: str =
     torch_dtype = resolve_dtype()
 
     # 确定实际使用的模型路径
-    actual_path = get_model_path(model_id, local_path, container_path, workspace_path) if (local_path or container_path) else model_id
+    actual_path = (
+        get_model_path(model_id, local_path, container_path, workspace_path)
+        if (local_path or container_path)
+        else model_id
+    )
 
     print(f"[加载模型] 使用路径: {actual_path}")
     print(f"[加载模型] 数据类型: {torch_dtype}")
@@ -224,7 +235,7 @@ def main() -> None:
         LLM_ID,
         local_path=LLM_LOCAL_PATH,
         container_path=LLM_CONTAINER_PATH,
-        workspace_path=LLM_WORKSPACE_PATH
+        workspace_path=LLM_WORKSPACE_PATH,
     )
     inference_prompts = [
         "请用200字描述一个探索脑连接组的多模态实验设计，突出成像与AI分析的融合。",
@@ -240,7 +251,7 @@ def main() -> None:
         GUARD_ID,
         local_path=GUARD_LOCAL_PATH,
         container_path=GUARD_CONTAINER_PATH,
-        workspace_path=GUARD_WORKSPACE_PATH
+        workspace_path=GUARD_WORKSPACE_PATH,
     )
     safety_inputs = [
         "总结近红外光谱在脑机接口中的优势，重点强调可穿戴和非侵入性。",
@@ -257,10 +268,11 @@ def main() -> None:
     )
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(json.dumps(asdict(payload), ensure_ascii=False, indent=2), encoding="utf-8")
+    OUTPUT_PATH.write_text(
+        json.dumps(asdict(payload), ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(f"[io-test] ✓ 结果已写入 {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
     main()
-

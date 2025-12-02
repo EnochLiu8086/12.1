@@ -16,6 +16,7 @@ GUARD_CONTAINER_PATH = os.getenv("GUARD_CONTAINER_PATH", "/cache/meta-llama_Llam
 LLM_WORKSPACE_PATH = "/workspace/models/meta-llama_Llama-3.2-3B-Instruct"
 GUARD_WORKSPACE_PATH = "/workspace/models/meta-llama_Llama-Guard-3-1B"
 
+
 def check_model_path(path: str, name: str):
     """检查模型路径"""
     print(f"\n{'='*60}")
@@ -48,7 +49,7 @@ def check_model_path(path: str, name: str):
             safetensors = list(path_obj.glob("*.safetensors"))
             if safetensors:
                 total_size = sum(f.stat().st_size for f in safetensors)
-                total_size_gb = total_size / (1024 ** 3)
+                total_size_gb = total_size / (1024**3)
                 print(f"✓ 找到 {len(safetensors)} 个模型文件，总大小: {total_size_gb:.2f} GB")
             else:
                 print("⚠ 未找到 .safetensors 文件")
@@ -65,9 +66,10 @@ def check_model_path(path: str, name: str):
         else:
             print(f"  父目录也不存在: {parent}")
 
+
 def main():
     print("模型路径检查工具")
-    print("="*60)
+    print("=" * 60)
 
     # 检查容器内路径（主要路径）
     check_model_path(LLM_CONTAINER_PATH, "推理模型（容器内 - /cache）")
@@ -121,6 +123,6 @@ def main():
         print("✗ /workspace/models 不存在")
         print("  提示: 如果模型在 F 盘，请确保启动容器时使用 -v F:/models:/workspace/models")
 
+
 if __name__ == "__main__":
     main()
-

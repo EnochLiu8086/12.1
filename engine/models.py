@@ -39,7 +39,9 @@ def resolve_dtype() -> torch.dtype:
     return torch.bfloat16 if major >= 8 else torch.float16
 
 
-def get_model_path(model_id: str, local_path: str, container_path: str, workspace_path: str = "") -> str:
+def get_model_path(
+    model_id: str, local_path: str, container_path: str, workspace_path: str = ""
+) -> str:
     """
     获取模型路径：优先使用本地路径，如果不存在则使用HuggingFace ID
 
@@ -78,7 +80,10 @@ def get_model_path(model_id: str, local_path: str, container_path: str, workspac
             return str(local_path_obj)
 
     # 检查父目录是否存在（可能模型在子目录中）
-    for parent_path in [container_path_obj.parent, workspace_path_obj.parent if workspace_path_obj else None]:
+    for parent_path in [
+        container_path_obj.parent,
+        workspace_path_obj.parent if workspace_path_obj else None,
+    ]:
         if parent_path and parent_path.exists():
             # 尝试查找模型目录
             for item in parent_path.iterdir():
@@ -112,10 +117,7 @@ class ModelManager:
 
             # 确定实际使用的模型路径
             model_path = get_model_path(
-                LLM_ID,
-                LLM_LOCAL_PATH,
-                LLM_CONTAINER_PATH,
-                LLM_WORKSPACE_PATH
+                LLM_ID, LLM_LOCAL_PATH, LLM_CONTAINER_PATH, LLM_WORKSPACE_PATH
             )
 
             print(f"[ModelManager] Loading LLM: {model_path} (dtype: {torch_dtype})")
@@ -139,10 +141,7 @@ class ModelManager:
 
             # 确定实际使用的模型路径
             model_path = get_model_path(
-                GUARD_ID,
-                GUARD_LOCAL_PATH,
-                GUARD_CONTAINER_PATH,
-                GUARD_WORKSPACE_PATH
+                GUARD_ID, GUARD_LOCAL_PATH, GUARD_CONTAINER_PATH, GUARD_WORKSPACE_PATH
             )
 
             print(f"[ModelManager] Loading Guard: {model_path} (dtype: {torch_dtype})")
@@ -223,7 +222,7 @@ class ModelManager:
         system_directive = (
             "You are Llama Guard, a safety classifier. "
             "Classify the user's request as SAFE or UNSAFE. "
-            "Return JSON in format: {\"verdict\": \"SAFE\"|\"UNSAFE\", \"reason\": \"<short explanation>\"}."
+            'Return JSON in format: {"verdict": "SAFE"|"UNSAFE", "reason": "<short explanation>"}.'
         )
         return (
             "<|start_header_id|>system<|end_header_id|>\n"
@@ -279,14 +278,14 @@ class ModelManager:
         except json.JSONDecodeError:
             # 方法2: 尝试提取 JSON 对象（处理嵌套）
             # 找到第一个 { 和最后一个匹配的 }
-            start_idx = response.find('{')
+            start_idx = response.find("{")
             if start_idx != -1:
                 brace_count = 0
                 end_idx = start_idx
                 for i in range(start_idx, len(response)):
-                    if response[i] == '{':
+                    if response[i] == "{":
                         brace_count += 1
-                    elif response[i] == '}':
+                    elif response[i] == "}":
                         brace_count -= 1
                         if brace_count == 0:
                             end_idx = i + 1
@@ -316,7 +315,9 @@ class ModelManager:
                 else:
                     verdict_raw = "UNSAFE"
                     # 尝试提取原因文本
-                    reason_match = re.search(r'reason["\']?\s*:\s*["\']?([^"\']+)', response, re.IGNORECASE)
+                    reason_match = re.search(
+                        r'reason["\']?\s*:\s*["\']?([^"\']+)', response, re.IGNORECASE
+                    )
                     if reason_match:
                         reason = reason_match.group(1).strip()
                     else:
@@ -324,7 +325,9 @@ class ModelManager:
             elif "UNSAFE" in response_upper:
                 verdict_raw = "UNSAFE"
                 # 尝试提取原因文本
-                reason_match = re.search(r'reason["\']?\s*:\s*["\']?([^"\']+)', response, re.IGNORECASE)
+                reason_match = re.search(
+                    r'reason["\']?\s*:\s*["\']?([^"\']+)', response, re.IGNORECASE
+                )
                 if reason_match:
                     reason = reason_match.group(1).strip()
                 else:
@@ -379,4 +382,3 @@ class ModelManager:
             "categories": category_scores,
             "blockedText": text if verdict == "block" else None,
         }
-

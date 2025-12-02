@@ -11,8 +11,10 @@ from unittest.mock import Mock, patch
 def mock_model_loading():
     """在 CI 环境中自动 mock 模型加载"""
     if os.getenv("SKIP_MODEL_LOAD", "false").lower() == "true":
-        with patch("engine.models.AutoModelForCausalLM.from_pretrained") as mock_model, \
-             patch("engine.models.AutoTokenizer.from_pretrained") as mock_tokenizer:
+        with (
+            patch("engine.models.AutoModelForCausalLM.from_pretrained") as mock_model,
+            patch("engine.models.AutoTokenizer.from_pretrained") as mock_tokenizer,
+        ):
             # 创建 mock tokenizer
             mock_tok = Mock()
             mock_tok.pad_token = None
@@ -69,15 +71,20 @@ def mock_model_manager():
     mock_output_ids.__getitem__.return_value = [1, 2, 3, 4, 5]
     mock_model.generate.return_value = mock_output_ids
 
-    with patch.object(ModelManager, "load_llm", return_value=(mock_tokenizer, mock_model)), \
-         patch.object(ModelManager, "load_guard", return_value=(mock_tokenizer, mock_model)), \
-         patch.object(ModelManager, "generate", return_value=("Mocked output", 10, 20, 100.0)), \
-         patch.object(ModelManager, "moderate", return_value={
-             "verdict": "allow",
-             "severity": "low",
-             "rationale": ["No issues found"],
-             "categories": []
-         }):
+    with (
+        patch.object(ModelManager, "load_llm", return_value=(mock_tokenizer, mock_model)),
+        patch.object(ModelManager, "load_guard", return_value=(mock_tokenizer, mock_model)),
+        patch.object(ModelManager, "generate", return_value=("Mocked output", 10, 20, 100.0)),
+        patch.object(
+            ModelManager,
+            "moderate",
+            return_value={
+                "verdict": "allow",
+                "severity": "low",
+                "rationale": ["No issues found"],
+                "categories": [],
+            },
+        ),
+    ):
         manager = ModelManager()
         yield manager
-

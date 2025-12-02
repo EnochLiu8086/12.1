@@ -55,4 +55,3 @@ def test_model_manager_load_llm():
     tokenizer, model = manager.load_llm()
     assert tokenizer is not None
     assert model is not None
-

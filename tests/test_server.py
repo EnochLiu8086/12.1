@@ -88,4 +88,3 @@ def test_pipeline_endpoint_with_mock(mock_model_manager):
         # 验证错误信息
         error_detail = response.json().get("detail", "").lower()
         assert "model" in error_detail or "load" in error_detail or "failed" in error_detail
-
