@@ -19,7 +19,6 @@ from pathlib import Path
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-
 # 模型配置：优先使用本地路径，如果不存在则使用HuggingFace ID
 # Windows本地路径（F盘）
 LLM_LOCAL_PATH = os.getenv("LLM_LOCAL_PATH", "F:/models/meta-llama_Llama-3.2-3B-Instruct")

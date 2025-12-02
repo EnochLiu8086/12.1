@@ -3,14 +3,16 @@
 """
 
 import os
+
 import pytest
 
 
 @pytest.mark.unit
 def test_resolve_dtype():
     """测试数据类型解析函数（不依赖模型）"""
-    from engine.models import resolve_dtype
     import torch
+
+    from engine.models import resolve_dtype
 
     dtype = resolve_dtype()
     assert dtype in [torch.float32, torch.float16, torch.bfloat16]

@@ -3,8 +3,9 @@ pytest 配置和共享 fixtures
 """
 
 import os
-import pytest
 from unittest.mock import Mock, patch
+
+import pytest
 
 
 @pytest.fixture(autouse=True)

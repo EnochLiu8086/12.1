@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 try:
-    from huggingface_hub import snapshot_download, login
+    from huggingface_hub import login, snapshot_download
     from huggingface_hub.utils import HfHubHTTPError
 except ImportError:
     print("错误: 需要安装 huggingface_hub")

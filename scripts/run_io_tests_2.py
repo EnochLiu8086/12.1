@@ -16,7 +16,6 @@ from pathlib import Path
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-
 LLM_ID = "meta-llama/Llama-3.2-3B"
 GUARD_ID = "meta-llama/Llama-Guard-3-1B"
 OUTPUT_PATH = Path("notebooks/io_test_english_results.json")
