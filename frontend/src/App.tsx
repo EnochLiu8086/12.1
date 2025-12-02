@@ -5,7 +5,7 @@ import { ChatPanel } from "./components/ChatPanel";
 import { MetricsPanel, type MetricPoint } from "./components/MetricsPanel";
 import { ModerationPanel } from "./components/ModerationPanel";
 import { ParameterPanel } from "./components/ParameterPanel";
-import { moderateOnly, runPipeline } from "./lib/api";
+import { moderateOnly, runPipeline } from "./lib/api.ts";
 import { useParameterStore } from "./store/useParameterStore";
 import type {
   ChatMessage,
