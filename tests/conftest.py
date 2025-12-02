@@ -3,7 +3,7 @@ pytest 配置和共享 fixtures
 """
 
 import os
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
