@@ -14,7 +14,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
     let message = `Request failed with status ${response.status}`;
     try {
       // 尝试从后端读取更详细的错误信息
-      const data: any = await response.json();
+      const data = (await response.json()) as { detail?: unknown };
       if (data?.detail) {
         message = typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail);
       }
