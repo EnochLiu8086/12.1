@@ -7,7 +7,12 @@ import { ModerationPanel } from "./components/ModerationPanel";
 import { ParameterPanel } from "./components/ParameterPanel";
 import { moderateOnly, runPipeline } from "./lib/api";
 import { useParameterStore } from "./store/useParameterStore";
-import type { ChatMessage, GuardResult } from "./types/models";
+import type {
+  ChatMessage,
+  GuardResult,
+  PipelineRequest,
+  PipelineResponse,
+} from "./types/models";
 
 function App() {
   const { inference, guard } = useParameterStore();
@@ -20,12 +25,12 @@ function App() {
   );
   const [error, setError] = useState<string | null>(null);
 
-  const pipelineMutation = useMutation({
-    mutationFn: (payload: {
-      prompt: string;
-      systemPrompt?: string;
-      context?: string;
-    }) =>
+  const pipelineMutation = useMutation<
+    PipelineResponse,
+    Error,
+    Pick<PipelineRequest, "prompt" | "systemPrompt" | "context">
+  >({
+    mutationFn: (payload) =>
       runPipeline({
         prompt: payload.prompt,
         systemPrompt: payload.systemPrompt,
@@ -79,7 +84,7 @@ function App() {
     },
   });
 
-  const moderationMutation = useMutation({
+  const moderationMutation = useMutation<GuardResult, Error, string>({
     mutationFn: (text: string) =>
       moderateOnly({
         text,
